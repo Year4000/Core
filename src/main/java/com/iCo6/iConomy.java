@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.Locale;
 
-import com.nijikokun.bukkit.Permissions.Permissions;
+// DISABLED for compile
+//import com.nijikokun.bukkit.Permissions.Permissions;
 
 import com.iCo6.Constants.Drivers;
 import com.iCo6.command.Handler;
@@ -75,7 +76,10 @@ public class iConomy extends JavaPlugin {
 
     private static Accounts Accounts = new Accounts();
     public Parser Commands = new Parser();
-    public Permissions Permissions;
+
+    // DISABLED for compile
+    //public Permissions Permissions;
+
     private boolean testedPermissions = false;
 
     public static boolean TerminalSupport = false;
@@ -98,9 +102,10 @@ public class iConomy extends JavaPlugin {
             // Server & Terminal Support
             Server = getServer();
 
-            if(getServer().getServerName().equalsIgnoreCase("craftbukkit")) {
-                TerminalSupport = ((CraftServer)getServer()).getReader().getTerminal().isANSISupported();
-            }
+ 	    // DISABLED for compile
+            //if(getServer().getServerName().equalsIgnoreCase("craftbukkit")) {
+            //    TerminalSupport = ((CraftServer)getServer()).getReader().getTerminal().isANSISupported();
+            //}
 
             // Get general plugin information
             info = getDescription();
@@ -421,7 +426,8 @@ public class iConomy extends JavaPlugin {
     }
 
     public boolean hasPermissions(CommandSender sender, String command) {
-        if(sender instanceof Player) {
+// DISABLED for compile
+/*        if(sender instanceof Player) {
             Player player = (Player)sender;
 
             if(player == null) {
@@ -467,7 +473,7 @@ public class iConomy extends JavaPlugin {
                 }
             }
         }
-
+*/
         return true;
     }
 
