@@ -36,14 +36,6 @@
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
-    <!-- Following dependency is provided by CraftBukkit -->
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>10.0.1</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
     <!-- H2 Database -->
     <dependency>
         <groupId>com.h2database</groupId>
