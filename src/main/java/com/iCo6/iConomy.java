@@ -115,7 +115,7 @@ public class iConomy extends JavaPlugin {
             if(!directory.exists()) directory.mkdir();
 
             // Extract Files
-            Common.extract("Config.yml", "Template.yml");
+            Common.extract(this, "Config.yml", "Template.yml");
 
             // Setup Configuration
             Constants.load(new File(directory, "Config.yml"));
@@ -219,7 +219,7 @@ public class iConomy extends JavaPlugin {
                 // If it doesn't exist, Create one.
                 if(Database.isSQL()) {
                     if(!Database.tableExists(Constants.Nodes.DatabaseTable.toString())) {
-                        String SQL = Common.resourceToString("SQL/Core/Create-Table-" + Database.getType().toString().toLowerCase() + ".sql");
+                        String SQL = Common.resourceToString(this, "SQL/Core/Create-Table-" + Database.getType().toString().toLowerCase() + ".sql");
                         SQL = String.format(SQL, Constants.Nodes.DatabaseTable.getValue());
 
                         try {

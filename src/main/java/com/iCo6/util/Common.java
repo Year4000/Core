@@ -122,7 +122,12 @@ public class Common {
             }
         } else {
             int plural = plural(Double.valueOf(famount));
-            String currency = maj.get(plural);
+
+	    // Make sure that if the config does not get loaded
+	    // properly we don't crap out
+	    String currency = "None";
+	    if (maj.size() > plural)
+            	currency = maj.get(plural);
 
             formatted = amount + " " + currency;
         }
@@ -152,17 +157,18 @@ public class Common {
         return current + " " + units[i] + ((current > 1 && i > 1) ? "s" : "");
     }
 
-    public static void extract(String... names) {
+    public static void extract(iConomy plugin, String... names) {
         for(String name: names) {
-            File actual = new File(iConomy.directory, name);
-
+            File actual = new File(plugin.directory, name);
             if(actual.exists())
                 continue;
 
-            InputStream input = iConomy.class.getResourceAsStream("/resources/" + name);
+            InputStream input = plugin.getResource(name);
 
-            if(input == null)
+            if(input == null) {
+		System.out.println("[iConomy] Could not read resource from jar: " + name);		
                 continue;
+	    }
 
             FileOutputStream output = null;
 
@@ -176,6 +182,7 @@ public class Common {
 
                 System.out.println("[iConomy] Default setup file written: " + name);
             } catch (Exception e) {
+		System.out.println("[iConomy] Error writing file: " + name);
             } finally {
                 try { if (input != null) input.close();
                 } catch (Exception e) { }
@@ -186,8 +193,8 @@ public class Common {
         }
     }
 
-    public static String resourceToString(String name) {
-        InputStream input = iConomy.class.getResourceAsStream("/resources/" + name);
+    public static String resourceToString(iConomy plugin, String name) {
+        InputStream input = plugin.getResource(name);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
 

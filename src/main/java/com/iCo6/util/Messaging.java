@@ -39,7 +39,8 @@ public class Messaging {
             if(item.contains(","))
                 for(String i: item.split(","))
                     original = original.replace("+" + i, String.valueOf(arguments.get(item)));
-            else {
+            else if (original != null) {
+		// This only works on non null strings!
                 original = original.replace("+" + item, String.valueOf(arguments.get(item)));
             }
         }
@@ -105,6 +106,10 @@ public class Messaging {
      * @return <code>String</code> - The parsed string after conversion.
      */
     public static String colorize(String string) {
+	// Do not try and process a null string
+	if(string == null)
+	    return "";
+
         if(iConomy.TerminalSupport)
             if(!(sender instanceof Player))
                 string = string.replace("`r", "\033[1;31m")                  .replace("`R", "\033[0;31m")
