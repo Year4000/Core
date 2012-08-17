@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.Locale;
 
-// DISABLED for compile
-//import com.nijikokun.bukkit.Permissions.Permissions;
-
 import com.iCo6.Constants.Drivers;
 import com.iCo6.command.Handler;
 import com.iCo6.command.Parser;
@@ -77,11 +74,6 @@ public class iConomy extends JavaPlugin {
     private static Accounts Accounts = new Accounts();
     public Parser Commands = new Parser();
 
-    // DISABLED for compile
-    //public Permissions Permissions;
-
-    private boolean testedPermissions = false;
-
     public static boolean TerminalSupport = false;
     public static File directory;
     public static Database Database;
@@ -102,10 +94,9 @@ public class iConomy extends JavaPlugin {
             // Server & Terminal Support
             Server = getServer();
 
- 	    // DISABLED for compile
-            //if(getServer().getServerName().equalsIgnoreCase("craftbukkit")) {
-            //    TerminalSupport = ((CraftServer)getServer()).getReader().getTerminal().isANSISupported();
-            //}
+            if(getServer().getServerName().equalsIgnoreCase("craftbukkit")) {
+		TerminalSupport = ((CraftServer)getServer()).getReader().getTerminal().isAnsiSupported();
+            }
 
             // Get general plugin information
             info = getDescription();
@@ -441,35 +432,15 @@ public class iConomy extends JavaPlugin {
                 if(node == null)
                     return true;
 
-                if(this.Permissions == null)
-                    if(!this.testedPermissions) {
-                        Plugin Perms = Server.getPluginManager().getPlugin("Permissions");
-                        
-                        if (Perms != null) {
-                            if (Perms.isEnabled()) {
-                                this.Permissions = ((Permissions)Perms);
-                                System.out.println("[iConomy] hooked into Permissions.");
-                            }
-                        }
-
-                        this.testedPermissions = true;
+                Permission perm = new Permission(node);
+                try {
+                	if (player.hasPermission(perm)
+                    		|| player.hasPermission(node)
+                    		|| player.hasPermission(node.toLowerCase())) {
+                    	return true;
                     }
-                
-                if(this.Permissions != null) {
-                    if(Permissions.Security.permission(player, node) || Permissions.Security.permission(player, node.toLowerCase()))
-                        return true;
-
-                    return false;
-                } else {
-                    try {
-                        Permission perm = new Permission(node);
-                        if(player.hasPermission(perm) || player.hasPermission(node) || player.hasPermission(node.toLowerCase()))
-                            return true;
-
-                        return false;
-                    } catch(Exception e) {
-                        return player.isOp();
-                    }
+                } catch (Exception e) {
+                	return player.isOp();
                 }
             }
         }
