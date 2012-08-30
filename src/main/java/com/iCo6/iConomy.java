@@ -37,6 +37,7 @@ import java.util.Timer;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -419,7 +420,6 @@ public class iConomy extends JavaPlugin {
     public boolean hasPermissions(CommandSender sender, String command) {
         if(sender instanceof Player) {
             Player player = (Player)sender;
-
             if(player == null) {
                 System.out.println("[iConomy] Cannot execute command with false player");
                 return false;
@@ -433,15 +433,17 @@ public class iConomy extends JavaPlugin {
 
                 Permission perm = new Permission(node);
                 try {
-                	if (player.hasPermission(perm)
-                    		|| player.hasPermission(node)
-                    		|| player.hasPermission(node.toLowerCase())) {
-                    	return true;
+                    if (player.hasPermission(perm)
+                     || player.hasPermission(node)
+                     || player.hasPermission(node.toLowerCase())) {
+                        return true;
                     }
                 } catch (Exception e) {
-                	return player.isOp();
+                        return player.isOp();
                 }
             }
+        } else if (sender instanceof ConsoleCommandSender) {
+            return true;
         }
         return false;
     }
