@@ -417,8 +417,7 @@ public class iConomy extends JavaPlugin {
     }
 
     public boolean hasPermissions(CommandSender sender, String command) {
-// DISABLED for compile
-/*        if(sender instanceof Player) {
+        if(sender instanceof Player) {
             Player player = (Player)sender;
 
             if(player == null) {
@@ -444,7 +443,6 @@ public class iConomy extends JavaPlugin {
                 }
             }
         }
-*/
         return true;
     }
 
