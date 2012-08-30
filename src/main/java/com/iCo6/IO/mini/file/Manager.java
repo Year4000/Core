@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.concurrent.Semaphore;
 
 /**
     Copyright (c) 2011, Nijiko Yonskai (@nijikokun) <nijikokun@gmail.com>
@@ -57,6 +58,7 @@ public final class Manager {
     private String file = "";
     private String source = "";
     private LinkedList<String> lines = new LinkedList<String>();
+    private final Semaphore file_lock = new Semaphore(1);
 
     public Manager(String directory, String file, boolean create) {
         this.directory = directory;
@@ -195,6 +197,7 @@ public final class Manager {
         this.existsCreate(directory, file);
 
         try {
+            file_lock.acquire();
             output = new BufferedWriter(new FileWriter(new File(directory, file), true));
 
             try {
@@ -205,14 +208,18 @@ public final class Manager {
             } catch (IOException ex) {
                 this.log(Level.SEVERE, ex);
                 output.close();
+                file_lock.release();
                 return false;
             }
 
             output.close();
+            file_lock.release();
             return true;
         } catch (FileNotFoundException ex) {
             this.log(Level.SEVERE, ex);
         } catch (IOException ex) {
+            this.log(Level.SEVERE, ex);
+        } catch (InterruptedException ex) { 
             this.log(Level.SEVERE, ex);
         }
 
@@ -235,6 +242,7 @@ public final class Manager {
         String line;
 
         try {
+            file_lock.acquire();
             input = new BufferedReader(new FileReader(new File(directory, file)));
 
             try {
@@ -248,11 +256,15 @@ public final class Manager {
                 input.close();
             } catch (IOException ex) {
                 this.log(Level.SEVERE, ex);
+                file_lock.release();
                 return false;
             }
 
+            file_lock.release();
             return true;
         } catch (FileNotFoundException ex) {
+            this.log(Level.SEVERE, ex);
+        } catch (InterruptedException ex) { 
             this.log(Level.SEVERE, ex);
         }
 
@@ -285,6 +297,7 @@ public final class Manager {
         this.existsCreate(directory, file);
 
         try {
+            file_lock.acquire();
             output = new BufferedWriter(new FileWriter(new File(directory, file)));
 
             try {
@@ -297,13 +310,17 @@ public final class Manager {
             } catch (IOException ex) {
                 this.log(Level.SEVERE, ex);
                 output.close();
+                file_lock.release();
                 return false;
             }
 
+            file_lock.release();
             return true;
         } catch (FileNotFoundException ex) {
             this.log(Level.SEVERE, ex);
         } catch (IOException ex) {
+            this.log(Level.SEVERE, ex);
+        } catch (InterruptedException ex) { 
             this.log(Level.SEVERE, ex);
         }
 
@@ -334,6 +351,7 @@ public final class Manager {
         File input = new File(directory, file);
 
         try {
+            file_lock.acquire();
             writer = new BufferedWriter(new FileWriter(input));
 
             try {
@@ -350,13 +368,15 @@ public final class Manager {
                 }
 
                 writer.close();
+                file_lock.release();
             } catch(IOException e) {
                 writer.close();
+                file_lock.release();
                 return false;
             }
 
-        } catch (Exception e) {
-            return false;
+        } catch (Exception ex) {
+            this.log(Level.SEVERE, ex);
         }
 
         return true;
@@ -379,6 +399,7 @@ public final class Manager {
         String line;
 
         try {
+            file_lock.acquire();
             reader = new BufferedReader(new FileReader(input));
 
             try {
@@ -389,6 +410,7 @@ public final class Manager {
                 reader.close();
             } catch(IOException e) {
                 reader.close();
+                file_lock.release();
                 return;
             }
 
@@ -403,12 +425,15 @@ public final class Manager {
                 writer.close();
             } catch(IOException e) {
                 writer.close();
+                file_lock.release();
                 return;
             }
-        } catch (Exception e) {
-            System.out.println(e);
-            return;
+
+            file_lock.release();
+        } catch (Exception ex) {
+            this.log(Level.SEVERE, ex);
         }
+
         return;
     }
 }
