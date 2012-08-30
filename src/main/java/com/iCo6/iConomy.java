@@ -443,7 +443,7 @@ public class iConomy extends JavaPlugin {
                 }
             }
         }
-        return true;
+        return false;
     }
 
     /**
